@@ -76,6 +76,15 @@ public class BeanDescriptor {
     }
 
     /**
+     * 获取字段描述符 {@link FieldDescriptor}
+     *
+     * @return 返回字段描述符
+     */
+    public FieldDescriptor getFieldDescriptor() {
+        return fieldDescriptor;
+    }
+
+    /**
      * 预处理, 检查类型是否已经缓存, 若没有, 则进行初始化并放到缓存
      */
     private void preHandle() {

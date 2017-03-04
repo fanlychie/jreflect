@@ -4,6 +4,7 @@ import org.fanlychie.reflection.exception.FieldOperationException;
 import org.fanlychie.reflection.exception.ReflectionCastException;
 import org.fanlychie.reflection.util.PrimitiveWrapperTypeUtils;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -131,6 +132,98 @@ public class FieldDescriptor {
     }
 
     /**
+     * 获取类声明的注解列表
+     *
+     * @param annotationClass 注解类型
+     * @param <T>             期望的返回值类型
+     * @return 返回参数给定的类型的注解列表
+     */
+    public <T extends Annotation> List<T> getAnnotations(Class<T> annotationClass) {
+        List<T> annotations = new ArrayList<>();
+        List<Field> fields = getFields();
+        for (Field field : fields) {
+            T annotation = field.getAnnotation(annotationClass);
+            if (annotation != null) {
+                annotations.add(annotation);
+            }
+        }
+        return annotations;
+    }
+
+    /**
+     * 根据属性名称获取注解对象
+     *
+     * @param name            属性名称
+     * @param annotationClass 注解类型
+     * @param <T>             期望的返回值类型
+     * @return 返回属性的注解对象
+     */
+    public <T extends Annotation> T getAnnotationByName(String name, Class<T> annotationClass) {
+        return getFieldByName(name).getAnnotation(annotationClass);
+    }
+
+    /**
+     * 根据属性类型获取注解对象
+     *
+     * @param type            属性类型
+     * @param annotationClass 注解类型
+     * @param <T>             期望的返回值类型
+     * @return 返回属性的注解对象
+     */
+    public <T extends Annotation> T getAnnotationByType(Class<?> type, Class<T> annotationClass) {
+        return getFieldByType(type).getAnnotation(annotationClass);
+    }
+
+    /**
+     * 根据名称获取属性对象
+     *
+     * @param name 属性名称
+     * @return 返回得到的属性对象
+     */
+    public Field getFieldByName(String name) {
+        if (name == null) {
+            throw new NullPointerException();
+        }
+        Field field = getNameFieldMap().get(name);
+        if (field == null) {
+            throw new FieldOperationException(pojoClass.getName() + " 类中找不到名称为 " + name + " 的属性");
+        }
+        return field;
+    }
+
+    /**
+     * 根据类型获取属性对象
+     *
+     * @param type 属性类型
+     * @return 返回得到的属性对象
+     */
+    public Field getFieldByType(Class<?> type) {
+        if (type == null) {
+            throw new NullPointerException();
+        }
+        List<Field> fields = getFields();
+        List<Field> matches = new ArrayList<>();
+        for (Field field : fields) {
+            Class<?> fieldType = field.getType();
+            if (fieldType != Object.class && (PrimitiveWrapperTypeUtils.matche(fieldType, type) || fieldType.isAssignableFrom(type))) {
+                matches.add(field);
+            }
+        }
+        if (matches.isEmpty()) {
+            throw new FieldOperationException(pojoClass.getName() + " 类中找不到类型为 " + type.getName() + " 的属性");
+        }
+        if (matches.size() > 1) {
+            StringBuilder names = new StringBuilder("[ ");
+            for (Field match : matches) {
+                names.append(match.getName()).append(", ");
+            }
+            names.replace(names.length() - 2, names.length(), " ]");
+            throw new FieldOperationException(pojoClass.getName() + " 类中找到多个属性类型为 " + type.getName() + " 的属性: " + names);
+        }
+        return matches.get(0);
+    }
+
+    /**
      * 获取查找到的 <属性名称, 属性对象> Map
      *
      * @return 返回查找到的 <属性名称, 属性对象> Map
@@ -212,55 +305,6 @@ public class FieldDescriptor {
      */
     private boolean isStaticField(Field field) {
         return (field.getModifiers() & Modifier.STATIC) == Modifier.STATIC;
-    }
-
-    /**
-     * 根据名称获取属性对象
-     *
-     * @param name 属性名称
-     * @return 返回得到的属性对象
-     */
-    private Field getFieldByName(String name) {
-        if (name == null) {
-            throw new NullPointerException();
-        }
-        Field field = getNameFieldMap().get(name);
-        if (field == null) {
-            throw new FieldOperationException(pojoClass.getName() + " 类中找不到名称为 " + name + " 的属性");
-        }
-        return field;
-    }
-
-    /**
-     * 根据类型获取属性对象
-     *
-     * @param type 属性类型
-     * @return 返回得到的属性对象
-     */
-    private Field getFieldByType(Class<?> type) {
-        if (type == null) {
-            throw new NullPointerException();
-        }
-        List<Field> fields = getFields();
-        List<Field> matches = new ArrayList<>();
-        for (Field field : fields) {
-            Class<?> fieldType = field.getType();
-            if (fieldType != Object.class && (PrimitiveWrapperTypeUtils.matche(fieldType, type) || fieldType.isAssignableFrom(type))) {
-                matches.add(field);
-            }
-        }
-        if (matches.isEmpty()) {
-            throw new FieldOperationException(pojoClass.getName() + " 类中找不到类型为 " + type.getName() + " 的属性");
-        }
-        if (matches.size() > 1) {
-            StringBuilder names = new StringBuilder("[ ");
-            for (Field match : matches) {
-                names.append(match.getName()).append(", ");
-            }
-            names.replace(names.length() - 2, names.length(), " ]");
-            throw new FieldOperationException(pojoClass.getName() + " 类中找到多个属性类型为 " + type.getName() + " 的属性: " + names);
-        }
-        return matches.get(0);
     }
 
     /**
