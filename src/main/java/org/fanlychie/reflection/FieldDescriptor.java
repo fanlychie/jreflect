@@ -8,6 +8,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -138,16 +139,27 @@ public class FieldDescriptor {
      * @param <T>             期望的返回值类型
      * @return 返回参数给定的类型的注解列表
      */
-    public <T extends Annotation> List<T> getAnnotations(Class<T> annotationClass) {
-        List<T> annotations = new ArrayList<>();
+    public <T extends Annotation> Collection<T> getAnnotations(Class<T> annotationClass) {
+        return getAnnotationsMap(annotationClass).values();
+    }
+
+    /**
+     * 获取类声明的注解表 <属性对象, 注解对象>
+     *
+     * @param annotationClass 注解类型
+     * @param <T>             期望的返回值类型
+     * @return 返回参数给定的类型的注解表
+     */
+    public <T extends Annotation> Map<Field, T> getAnnotationsMap(Class<T> annotationClass) {
+        Map<Field, T> map = new HashMap<>();
         List<Field> fields = getFields();
         for (Field field : fields) {
             T annotation = field.getAnnotation(annotationClass);
             if (annotation != null) {
-                annotations.add(annotation);
+                map.put(field, annotation);
             }
         }
-        return annotations;
+        return map;
     }
 
     /**
@@ -160,18 +172,6 @@ public class FieldDescriptor {
      */
     public <T extends Annotation> T getAnnotationByName(String name, Class<T> annotationClass) {
         return getFieldByName(name).getAnnotation(annotationClass);
-    }
-
-    /**
-     * 根据属性类型获取注解对象
-     *
-     * @param type            属性类型
-     * @param annotationClass 注解类型
-     * @param <T>             期望的返回值类型
-     * @return 返回属性的注解对象
-     */
-    public <T extends Annotation> T getAnnotationByType(Class<?> type, Class<T> annotationClass) {
-        return getFieldByType(type).getAnnotation(annotationClass);
     }
 
     /**
