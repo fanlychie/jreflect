@@ -119,8 +119,7 @@ public class FieldDescriptor {
                 if (primitiveType != null) {
                     field = getFieldByType(primitiveType);
                 }
-            } catch (Exception ex) {
-            }
+            } catch (Exception ex) {}
         }
         if (field == null) {
             throw foe;
@@ -186,7 +185,7 @@ public class FieldDescriptor {
         }
         Field field = getNameFieldMap().get(name);
         if (field == null) {
-            throw new FieldOperationException(pojoClass.getName() + " 类中找不到名称为 " + name + " 的属性");
+            throw new FieldOperationException(name + " property can not be found in " + pojoClass);
         }
         return field;
     }
@@ -210,15 +209,10 @@ public class FieldDescriptor {
             }
         }
         if (matches.isEmpty()) {
-            throw new FieldOperationException(pojoClass.getName() + " 类中找不到类型为 " + type.getName() + " 的属性");
+            throw new FieldOperationException(type.getName() + " type property can not be found in " + pojoClass);
         }
         if (matches.size() > 1) {
-            StringBuilder names = new StringBuilder("[ ");
-            for (Field match : matches) {
-                names.append(match.getName()).append(", ");
-            }
-            names.replace(names.length() - 2, names.length(), " ]");
-            throw new FieldOperationException(pojoClass.getName() + " 类中找到多个属性类型为 " + type.getName() + " 的属性: " + names);
+            throw new FieldOperationException("find more than one " + type.getName() + " type property in " + pojoClass);
         }
         return matches.get(0);
     }
@@ -318,7 +312,6 @@ public class FieldDescriptor {
         Field[] fields = pojoClass.getDeclaredFields();
         if (fields.length > 0) {
             for (Field field : fields) {
-                // 若 accessibleStatic=false, 遇到静态属性直接跳过
                 if (!accessibleStatic && isStaticField(field)) {
                     continue;
                 }
