@@ -28,9 +28,9 @@ public class BeanIntrospector {
     private NamePropertyDescriptor namePropertyDescriptor;
 
     /**
-     * 内存缓存
+     * 缓存
      */
-    private static final Map<Class<?>, NamePropertyDescriptor> DECLARED_PROPERTY_CACHE = new HashMap<>();
+    private static final Map<Class<?>, NamePropertyDescriptor> NAME_PROPERTY_DESCRIPTOR_CACHE = new HashMap<>();
 
     /**
      * 构建实例
@@ -141,18 +141,27 @@ public class BeanIntrospector {
         } else {
             targetClass = target.getClass();
         }
-        namePropertyDescriptor = DECLARED_PROPERTY_CACHE.get(targetClass);
+        namePropertyDescriptor = NAME_PROPERTY_DESCRIPTOR_CACHE.get(targetClass);
         if (namePropertyDescriptor == null) {
-            synchronized (DECLARED_PROPERTY_CACHE) {
-                if (DECLARED_PROPERTY_CACHE.get(targetClass) == null) {
-                    try {
-                        namePropertyDescriptor = new NamePropertyDescriptor(
-                                Introspector.getBeanInfo(targetClass).getPropertyDescriptors());
-                    } catch (IntrospectionException e) {
-                        throw new ReflectionCastException(e);
-                    }
-                    DECLARED_PROPERTY_CACHE.put(targetClass, namePropertyDescriptor);
+            putCache(targetClass);
+        }
+    }
+
+    /**
+     * 放入缓存
+     *
+     * @param targetClass 目标类
+     */
+    private void putCache(Class<?> targetClass) {
+        synchronized (NAME_PROPERTY_DESCRIPTOR_CACHE) {
+            if (NAME_PROPERTY_DESCRIPTOR_CACHE.get(targetClass) == null) {
+                try {
+                    namePropertyDescriptor = new NamePropertyDescriptor(
+                            Introspector.getBeanInfo(targetClass).getPropertyDescriptors());
+                } catch (IntrospectionException e) {
+                    throw new ReflectionCastException(e);
                 }
+                NAME_PROPERTY_DESCRIPTOR_CACHE.put(targetClass, namePropertyDescriptor);
             }
         }
     }

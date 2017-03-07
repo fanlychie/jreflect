@@ -20,9 +20,9 @@ public class BeanDescriptor {
     private FieldDescriptor fieldDescriptor;
 
     /**
-     * 内存缓存
+     * 缓存
      */
-    private static final Map<Class<?>, FieldDescriptor> DECLARED_FIELD_CACHE = new HashMap<>();
+    private static final Map<Class<?>, FieldDescriptor> FIELD_DESCRIPTOR_CACHE = new HashMap<>();
 
     /**
      * 构建实例
@@ -94,14 +94,22 @@ public class BeanDescriptor {
         } else {
             targetClass = target.getClass();
         }
-        fieldDescriptor = DECLARED_FIELD_CACHE.get(targetClass);
+        fieldDescriptor = FIELD_DESCRIPTOR_CACHE.get(targetClass);
         if (fieldDescriptor == null) {
-            synchronized (DECLARED_FIELD_CACHE) {
-                if (DECLARED_FIELD_CACHE.get(targetClass) == null) {
-                    fieldDescriptor = new FieldDescriptor(targetClass)
-                            .accessibleStatic(true).stopClass(Object.class).init();
-                    DECLARED_FIELD_CACHE.put(targetClass, fieldDescriptor);
-                }
+            putCache(targetClass);
+        }
+    }
+
+    /**
+     * 放入缓存
+     *
+     * @param targetClass 目标类
+     */
+    private void putCache(Class<?> targetClass) {
+        synchronized (FIELD_DESCRIPTOR_CACHE) {
+            if (FIELD_DESCRIPTOR_CACHE.get(targetClass) == null) {
+                fieldDescriptor = new FieldDescriptor(targetClass).accessibleStatic(true).stopClass(Object.class).init();
+                FIELD_DESCRIPTOR_CACHE.put(targetClass, fieldDescriptor);
             }
         }
     }
