@@ -46,7 +46,7 @@ public class User {
 
 提供动态操作对象属性或类属性的方法：
 
-**设置字段的值**
+**设置对象属性的值**
 
 ```java
 User user = new User();
@@ -60,7 +60,7 @@ descriptor.setValueByName(user, "name", "fanlychie");
 descriptor.setValueByType(user, "fanlychie");
 ```
 
-**获取字段的值**
+**获取对象属性的值**
 
 ```java
 String name = descriptor.getValueByName(user, "name");
@@ -71,3 +71,24 @@ String name = descriptor.getValueByName(user, "name");
 ```java
 String name = descriptor.getValueByType(user, String.class);
 ```
+
+**操作类属性(静态字段)**
+
+```java
+FieldDescriptor descriptor = new FieldDescriptor(User.class);
+descriptor.accessibleStatic(true);
+boolean defaultRememberMe = descriptor.getValueByName(null, "defaultRememberMe");
+```
+
+或
+
+```java
+boolean defaultRememberMe = descriptor.getValueByType(null, boolean.class);
+```
+
+# BeanDescriptor
+
+提供全局的动态操作对象属性或类属性的方法：
+
+**设置对象属性的值**
+
