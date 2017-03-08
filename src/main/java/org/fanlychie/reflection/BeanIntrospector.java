@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Bean 内省, 提供全局的操作bean对象的 getter/setter 方法
+ * Bean 内省, 提供全局的动态操作对象 getter/setter 方法[不支持操作类方法(静态方法)]
  * Created by fanlychie on 2017/3/4.
  */
 public class BeanIntrospector {
