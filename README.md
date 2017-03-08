@@ -88,7 +88,7 @@ boolean defaultRememberMe = descriptor.getValueByType(null, boolean.class);
 
 # BeanDescriptor
 
-提供全局的动态操作对象属性或类属性的方法：
+提供**全局的**动态操作对象属性或类属性的方法：
 
 **设置对象属性的值**
 
@@ -131,7 +131,7 @@ boolean defaultRememberMe = descriptor.getValueByType(boolean.class);
 
 # BeanIntrospector
 
-提供全局的动态操作对象 getter/setter 方法[不支持操作类方法(静态方法)]：
+提供**全局的**动态操作对象 getter/setter 方法[不支持操作类方法(静态方法)]：
 
 **调用Setter方法**
 
