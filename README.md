@@ -92,3 +92,69 @@ boolean defaultRememberMe = descriptor.getValueByType(null, boolean.class);
 
 **设置对象属性的值**
 
+```java
+User user = new User();
+BeanDescriptor descriptor = new BeanDescriptor(user);
+descriptor.setValueByName("name", "fanlychie");
+```
+
+或
+
+```java
+descriptor.setValueByType("fanlychie");
+```
+
+**获取对象属性的值**
+
+```java
+String name = descriptor.getValueByName("name");
+```
+
+或
+
+```java
+String name = descriptor.getValueByType(String.class);
+```
+
+**操作类属性(静态字段)**
+
+```java
+BeanDescriptor descriptor = new BeanDescriptor(User.class);
+boolean defaultRememberMe = descriptor.getValueByName("defaultRememberMe");
+```
+
+或
+
+```java
+boolean defaultRememberMe = descriptor.getValueByType(boolean.class);
+```
+
+# BeanIntrospector
+
+提供全局的动态操作对象 getter/setter 方法[不支持操作类方法(静态方法)]：
+
+**调用Setter方法**
+
+```java
+User user = new User();
+BeanIntrospector introspector = new BeanIntrospector(user);
+introspector.invokeSetterMethod("name", "fanlychie");
+```
+
+**调用Getter方法**
+
+```java
+String name = introspector.invokeGetterMethod("name");
+```
+
+**将对象转换为Map表示**
+
+```java
+Map<String, Object> map = BeanIntrospector.convertObjectToMap(user);
+```
+
+**将Map转换为对象表示**
+
+```java
+User user = BeanIntrospector.convertMapToObject(map, User.class);
+```
