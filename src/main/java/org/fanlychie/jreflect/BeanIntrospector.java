@@ -1,6 +1,6 @@
-package org.fanlychie.reflection;
+package org.fanlychie.jreflect;
 
-import org.fanlychie.reflection.exception.ReflectionCastException;
+import org.fanlychie.jreflect.exception.ReflectionCastException;
 
 import java.beans.IntrospectionException;
 import java.beans.Introspector;

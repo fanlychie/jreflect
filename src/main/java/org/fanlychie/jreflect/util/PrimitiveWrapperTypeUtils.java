@@ -1,4 +1,4 @@
-package org.fanlychie.reflection.util;
+package org.fanlychie.jreflect.util;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,4 +1,4 @@
-package org.fanlychie.reflection.exception;
+package org.fanlychie.jreflect.exception;
 
 /**
  * 运行时异常, 它内部包装了真实的非运行时异常对象, 通过 getCause 来取出真实异常

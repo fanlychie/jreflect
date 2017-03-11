@@ -1,8 +1,8 @@
-package org.fanlychie.reflection;
+package org.fanlychie.jreflect;
 
-import org.fanlychie.reflection.exception.FieldOperationException;
-import org.fanlychie.reflection.exception.ReflectionCastException;
-import org.fanlychie.reflection.util.PrimitiveWrapperTypeUtils;
+import org.fanlychie.jreflect.exception.FieldOperationException;
+import org.fanlychie.jreflect.exception.ReflectionCastException;
+import org.fanlychie.jreflect.util.PrimitiveWrapperTypeUtils;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
