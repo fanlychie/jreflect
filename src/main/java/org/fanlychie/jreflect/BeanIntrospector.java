@@ -28,7 +28,7 @@ public class BeanIntrospector {
     private NamePropertyDescriptor namePropertyDescriptor;
 
     /**
-     * 缓存
+     * 内存缓存
      */
     private static final Map<Class<?>, NamePropertyDescriptor> NAME_PROPERTY_DESCRIPTOR_CACHE = new HashMap<>();
 
@@ -132,29 +132,18 @@ public class BeanIntrospector {
     }
 
     /**
-     * 预处理, 检查类型是否已经缓存, 若没有, 则进行初始化并放到缓存
+     * 预处理, 检查是否已经缓存, 若没有, 则进行初始化并加载到内存缓存
      */
     private void preHandle() {
-        Class<?> targetClass = null;
-        if (target instanceof Class) {
-            targetClass = (Class<?>) target;
-        } else {
-            targetClass = target.getClass();
-        }
-        namePropertyDescriptor = NAME_PROPERTY_DESCRIPTOR_CACHE.get(targetClass);
-        if (namePropertyDescriptor == null) {
-            putCache(targetClass);
-        }
-    }
-
-    /**
-     * 放入缓存
-     *
-     * @param targetClass 目标类
-     */
-    private void putCache(Class<?> targetClass) {
         synchronized (NAME_PROPERTY_DESCRIPTOR_CACHE) {
-            if (NAME_PROPERTY_DESCRIPTOR_CACHE.get(targetClass) == null) {
+            Class<?> targetClass = null;
+            if (target instanceof Class) {
+                targetClass = (Class<?>) target;
+            } else {
+                targetClass = target.getClass();
+            }
+            namePropertyDescriptor = NAME_PROPERTY_DESCRIPTOR_CACHE.get(targetClass);
+            if (namePropertyDescriptor == null) {
                 try {
                     namePropertyDescriptor = new NamePropertyDescriptor(
                             Introspector.getBeanInfo(targetClass).getPropertyDescriptors());

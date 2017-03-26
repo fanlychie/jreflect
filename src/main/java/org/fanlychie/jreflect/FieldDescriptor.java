@@ -8,7 +8,6 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -132,24 +131,13 @@ public class FieldDescriptor {
     }
 
     /**
-     * 获取类声明的注解列表
-     *
-     * @param annotationClass 注解类型
-     * @param <T>             期望的返回值类型
-     * @return 返回参数给定的类型的注解列表
-     */
-    public <T extends Annotation> Collection<T> getAnnotations(Class<T> annotationClass) {
-        return getAnnotationsMap(annotationClass).values();
-    }
-
-    /**
-     * 获取类声明的注解表 <属性对象, 注解对象>
+     * 获取属性声明的注解表 <属性对象, 注解对象>
      *
      * @param annotationClass 注解类型
      * @param <T>             期望的返回值类型
      * @return 返回参数给定的类型的注解表
      */
-    public <T extends Annotation> Map<Field, T> getAnnotationsMap(Class<T> annotationClass) {
+    public <T extends Annotation> Map<Field, T> getFieldAnnotationMap(Class<T> annotationClass) {
         Map<Field, T> map = new HashMap<>();
         List<Field> fields = getFields();
         for (Field field : fields) {
@@ -159,18 +147,6 @@ public class FieldDescriptor {
             }
         }
         return map;
-    }
-
-    /**
-     * 根据属性名称获取注解对象
-     *
-     * @param name            属性名称
-     * @param annotationClass 注解类型
-     * @param <T>             期望的返回值类型
-     * @return 返回属性的注解对象
-     */
-    public <T extends Annotation> T getAnnotationByName(String name, Class<T> annotationClass) {
-        return getFieldByName(name).getAnnotation(annotationClass);
     }
 
     /**
@@ -282,7 +258,7 @@ public class FieldDescriptor {
     }
 
     /**
-     * 内部初始化
+     * 初始化
      *
      * @return 返回当前对象
      */
