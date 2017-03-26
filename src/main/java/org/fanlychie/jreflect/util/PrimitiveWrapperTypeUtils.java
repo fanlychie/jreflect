@@ -57,6 +57,10 @@ public final class PrimitiveWrapperTypeUtils {
         return null;
     }
 
+    static Class<?> getWrapperType(Class<?> type) {
+        return type.isPrimitive() ? PRIMITIVE_WRAPPER_MAP.get(type) : null;
+    }
+
     /**
      * 初始化数据
      */
