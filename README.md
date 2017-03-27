@@ -136,6 +136,22 @@ BeanDescriptor descriptor = new BeanDescriptor(User.class);
 User user = descriptor.newInstance();
 ```
 
+**方法调用**
+
+```java
+BeanDescriptor descriptor = new BeanDescriptor(User.class);
+User user = descriptor.newInstance();
+descriptor.invokeMethod("setName", "fanlychie");
+```
+
+或
+
+```java
+User user = new User();
+BeanDescriptor descriptor = new BeanDescriptor(user);
+descriptor.invokeMethod("setName", "fanlychie");
+```
+
 # BeanIntrospector
 
 提供**全局的**动态操作对象 getter/setter 方法[不支持操作类方法(静态方法)]：
@@ -164,4 +180,22 @@ Map<String, Object> map = BeanIntrospector.convertObjectToMap(user);
 
 ```java
 User user = BeanIntrospector.convertMapToObject(map, User.class);
+```
+
+# ConstructorDescriptor
+
+提供**全局的**操作类的构造器的方法：
+
+```java
+User user = new ConstructorDescriptor<User>(User.class).newInstance();
+```
+
+# MethodDescriptor
+
+提供**全局的**操作类或对象函数的方法：
+
+```java
+User user = new User();
+MethodDescriptor descriptor = new MethodDescriptor(user);
+descriptor.invokeMethod("setName", "fanlychie");
 ```
