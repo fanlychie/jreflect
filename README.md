@@ -2,6 +2,23 @@
 
 Java 基础反射操作工具包
 
+# 下载依赖
+
+```xml
+<repositories>
+    <repository>
+        <id>github-maven-repo</id>
+        <url>https://raw.github.com/fanlychie/maven-repo/releases</url>
+    </repository>
+</repositories>
+
+<dependency>
+    <groupId>org.fanlychie</groupId>
+    <artifactId>jreflect</artifactId>
+    <version>1.2.0</version>
+</dependency>
+```
+
 # 样例
 
 设现有一 POJO 类：
