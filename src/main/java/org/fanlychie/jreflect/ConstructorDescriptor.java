@@ -70,6 +70,7 @@ public class ConstructorDescriptor<T> {
             for (Constructor<?> constructor : constructors) {
                 String signature = MethodSignatureUtils.hashCodeString(null, constructor.getParameterTypes());
                 if (!constructorSignature.containsKey(signature)) {
+                    constructor.setAccessible(true);
                     constructorSignature.put(signature, constructor);
                 }
             }
