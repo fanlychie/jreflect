@@ -162,6 +162,7 @@ public class MethodDescriptor {
             for (Method method : methods) {
                 String signature = MethodSignatureUtils.hashCodeString(method.getName(), method.getParameterTypes());
                 if (!methodSignature.containsKey(signature)) {
+                    method.setAccessible(true);
                     methodSignature.put(signature, method);
                 }
             }
